@@ -1,3 +1,2 @@
-app:
-    resource: "@AppBundle/Controller/"
-    type:     annotation
+trello_user:
+    resource: "@TrelloUserBundle/Resources/config/routing.yml"
