@@ -1,0 +1,4 @@
+services:
+#    trello_user.example:
+#        class: Trello\UserBundle\Example
+#        arguments: [@service_id, "plain_value", %parameter%]
