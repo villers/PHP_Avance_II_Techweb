@@ -8,6 +8,14 @@ class DefaultController extends Controller
 {
     public function indexAction()
     {
-        return $this->render('TrelloAppBundle:Default:index.html.twig');
+        $em = $this->getDoctrine()->getManager();
+        $boards = $em->getRepository('TrelloAppBundle:Board')->findByUser($this->getUser());
+        return $this->render('TrelloAppBundle:Default:index.html.twig', compact('boards'));
     }
+
+    public function showAction()
+    {
+
+    }
+
 }
