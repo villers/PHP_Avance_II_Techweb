@@ -1,0 +1,3 @@
+trello_app_homepage:
+    path:     /
+    defaults: { _controller: TrelloAppBundle:Default:index }

@@ -1,2 +1,6 @@
+trello_app:
+    resource: "@TrelloAppBundle/Resources/config/routing.yml"
+    prefix:   /
+
 trello_user:
     resource: "@TrelloUserBundle/Resources/config/routing.yml"
