@@ -1,3 +1,15 @@
+trello_app_liste:
+    resource: "@TrelloAppBundle/Resources/config/routing/liste.yml"
+    prefix:   /liste
+
+trello_app_card:
+    resource: "@TrelloAppBundle/Resources/config/routing/card.yml"
+    prefix:   /card
+
+trello_app_board:
+    resource: "@TrelloAppBundle/Resources/config/routing/board.yml"
+    prefix:   /board
+
 trello_app_homepage:
     path:     /
     defaults: { _controller: TrelloAppBundle:Default:index }

@@ -37,13 +37,6 @@ class Board
     protected $description;
 
     /**
-     * @var string
-     *
-     * @ORM\Column(name="slug", type="string", length=255)
-     */
-    protected $slug;
-
-    /**
      * @var boolean
      *
      * @ORM\Column(name="archived", type="boolean")
@@ -119,29 +112,6 @@ class Board
     public function getDescription()
     {
         return $this->description;
-    }
-
-    /**
-     * Set slug
-     *
-     * @param string $slug
-     * @return Board
-     */
-    public function setSlug($slug)
-    {
-        $this->slug = $slug;
-
-        return $this;
-    }
-
-    /**
-     * Get slug
-     *
-     * @return string 
-     */
-    public function getSlug()
-    {
-        return $this->slug;
     }
 
     /**

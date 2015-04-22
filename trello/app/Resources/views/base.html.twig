@@ -27,8 +27,7 @@
             <div class="collapse navbar-collapse" id="headercollapse">
                 <ul class="nav navbar-nav navbar-left">
                     {%  if is_granted("IS_AUTHENTICATED_REMEMBERED") %}
-                        <li><a href="{{ path('trello_app_homepage') }}">Create board</a></li>
-                        <li><a href="{{ path('trello_app_homepage') }}">Show my boards</a></li>
+                        <li><a href="{{ path('board_new') }}">Create board</a></li>
                     {% endif %}
                 </ul>
                 <ul class="nav navbar-nav navbar-right">

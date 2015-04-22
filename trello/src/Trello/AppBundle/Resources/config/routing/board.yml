@@ -1,0 +1,26 @@
+board_show:
+    path:     /{id}/show
+    defaults: { _controller: "TrelloAppBundle:Board:show" }
+
+board_new:
+    path:     /new
+    defaults: { _controller: "TrelloAppBundle:Board:new" }
+
+board_create:
+    path:     /create
+    defaults: { _controller: "TrelloAppBundle:Board:create" }
+    methods:  POST
+
+board_edit:
+    path:     /{id}/edit
+    defaults: { _controller: "TrelloAppBundle:Board:edit" }
+
+board_update:
+    path:     /{id}/update
+    defaults: { _controller: "TrelloAppBundle:Board:update" }
+    methods:  [POST, PUT]
+
+board_delete:
+    path:     /{id}/delete
+    defaults: { _controller: "TrelloAppBundle:Board:delete" }
+    methods:  [POST, DELETE]

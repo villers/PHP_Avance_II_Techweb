@@ -1,0 +1,30 @@
+liste:
+    path:     /
+    defaults: { _controller: "TrelloAppBundle:Liste:index" }
+
+liste_show:
+    path:     /{id}/show
+    defaults: { _controller: "TrelloAppBundle:Liste:show" }
+
+liste_new:
+    path:     /new
+    defaults: { _controller: "TrelloAppBundle:Liste:new" }
+
+liste_create:
+    path:     /create
+    defaults: { _controller: "TrelloAppBundle:Liste:create" }
+    methods:  POST
+
+liste_edit:
+    path:     /{id}/edit
+    defaults: { _controller: "TrelloAppBundle:Liste:edit" }
+
+liste_update:
+    path:     /{id}/update
+    defaults: { _controller: "TrelloAppBundle:Liste:update" }
+    methods:  [POST, PUT]
+
+liste_delete:
+    path:     /{id}/delete
+    defaults: { _controller: "TrelloAppBundle:Liste:delete" }
+    methods:  [POST, DELETE]
