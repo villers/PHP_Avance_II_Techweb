@@ -11,7 +11,7 @@ liste_new:
     defaults: { _controller: "TrelloAppBundle:Liste:new" }
 
 liste_create:
-    path:     /create
+    path:     /{id}/create
     defaults: { _controller: "TrelloAppBundle:Liste:create" }
     methods:  POST
 

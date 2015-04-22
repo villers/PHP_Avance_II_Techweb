@@ -20,42 +20,47 @@ class Board
      * @ORM\Id
      * @ORM\GeneratedValue(strategy="AUTO")
      */
-    protected $id;
+    public $id;
 
     /**
      * @var string
      *
      * @ORM\Column(name="title", type="string", length=255)
      */
-    protected $title;
+    public $title;
 
     /**
      * @var string
      *
      * @ORM\Column(name="description", type="string", length=255)
      */
-    protected $description;
+    public $description;
 
     /**
      * @var boolean
      *
      * @ORM\Column(name="archived", type="boolean")
      */
-    protected $archived;
+    public $archived;
 
     /**
-     * @ORM\OneToMany(targetEntity="Liste", mappedBy="board")
+     * @ORM\OneToMany(targetEntity="Liste", mappedBy="board", cascade={"remove"})
      */
-    protected $liste;
+    public $liste;
 
     /**
-     * @ORM\ManyToOne(targetEntity="\Trello\UserBundle\Entity\User", inversedBy="board")
-     */
-    protected $user;
+     * @ORM\ManyToMany(targetEntity="\Trello\UserBundle\Entity\User", inversedBy="boards")
+     **/
+    public $users;
 
     public function __construct()
     {
         $this->liste = new ArrayCollection();
+        $this->users = new ArrayCollection();
+    }
+
+    public function __toString(){
+        return $this->title;
     }
 
     /**
@@ -170,26 +175,37 @@ class Board
         return $this->liste;
     }
 
+
     /**
-     * Set user
+     * Add users
      *
-     * @param \Trello\UserBundle\Entity\User $user
+     * @param \Trello\UserBundle\Entity\User $users
      * @return Board
      */
-    public function setUser(\Trello\UserBundle\Entity\User $user = null)
+    public function addUser(\Trello\UserBundle\Entity\User $users)
     {
-        $this->user = $user;
+        $this->users[] = $users;
 
         return $this;
     }
 
     /**
-     * Get user
+     * Remove users
      *
-     * @return \Trello\UserBundle\Entity\User 
+     * @param \Trello\UserBundle\Entity\User $users
      */
-    public function getUser()
+    public function removeUser(\Trello\UserBundle\Entity\User $users)
     {
-        return $this->user;
+        $this->users->removeElement($users);
+    }
+
+    /**
+     * Get users
+     *
+     * @return \Doctrine\Common\Collections\Collection 
+     */
+    public function getUsers()
+    {
+        return $this->users;
     }
 }

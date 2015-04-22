@@ -16,9 +16,6 @@ class ListeType extends AbstractType
     {
         $builder
             ->add('title')
-            ->add('archived')
-            ->add('sort')
-            ->add('board')
         ;
     }
     

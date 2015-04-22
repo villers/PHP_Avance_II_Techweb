@@ -2,6 +2,7 @@
 
 namespace Trello\AppBundle\Controller;
 
+use Symfony\Component\HttpFoundation\JsonResponse;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Bundle\FrameworkBundle\Controller\Controller;
 
@@ -33,124 +34,23 @@ class CardController extends Controller
      * Creates a new Card entity.
      *
      */
-    public function createAction(Request $request)
-    {
-        $entity = new Card();
-        $form = $this->createCreateForm($entity);
-        $form->handleRequest($request);
-
-        if ($form->isValid()) {
-            $em = $this->getDoctrine()->getManager();
-            $em->persist($entity);
-            $em->flush();
-
-            return $this->redirect($this->generateUrl('card_show', array('id' => $entity->getId())));
-        }
-
-        return $this->render('TrelloAppBundle:Card:new.html.twig', array(
-            'entity' => $entity,
-            'form'   => $form->createView(),
-        ));
-    }
-
-    /**
-     * Creates a form to create a Card entity.
-     *
-     * @param Card $entity The entity
-     *
-     * @return \Symfony\Component\Form\Form The form
-     */
-    private function createCreateForm(Card $entity)
-    {
-        $form = $this->createForm(new CardType(), $entity, array(
-            'action' => $this->generateUrl('card_create'),
-            'method' => 'POST',
-        ));
-
-        $form->add('submit', 'submit', array('label' => 'Create'));
-
-        return $form;
-    }
-
-    /**
-     * Displays a form to create a new Card entity.
-     *
-     */
-    public function newAction()
-    {
-        $entity = new Card();
-        $form   = $this->createCreateForm($entity);
-
-        return $this->render('TrelloAppBundle:Card:new.html.twig', array(
-            'entity' => $entity,
-            'form'   => $form->createView(),
-        ));
-    }
-
-    /**
-     * Finds and displays a Card entity.
-     *
-     */
-    public function showAction($id)
+    public function createAction($id, Request $request)
     {
         $em = $this->getDoctrine()->getManager();
+        $list = $em->getRepository('TrelloAppBundle:Liste')->find($id);
 
-        $entity = $em->getRepository('TrelloAppBundle:Card')->find($id);
+        $entity = new Card();
+        $entity->setListe($list);
+        $entity->setArchived(false);
+        $entity->setTitle($request->request->get('title'));
+        $entity->setDescription($request->request->get('description'));
 
-        if (!$entity) {
-            throw $this->createNotFoundException('Unable to find Card entity.');
-        }
+        $em->persist($entity);
+        $em->flush();
 
-        $deleteForm = $this->createDeleteForm($id);
-
-        return $this->render('TrelloAppBundle:Card:show.html.twig', array(
-            'entity'      => $entity,
-            'delete_form' => $deleteForm->createView(),
-        ));
+        return new JsonResponse(get_object_vars($entity));
     }
 
-    /**
-     * Displays a form to edit an existing Card entity.
-     *
-     */
-    public function editAction($id)
-    {
-        $em = $this->getDoctrine()->getManager();
-
-        $entity = $em->getRepository('TrelloAppBundle:Card')->find($id);
-
-        if (!$entity) {
-            throw $this->createNotFoundException('Unable to find Card entity.');
-        }
-
-        $editForm = $this->createEditForm($entity);
-        $deleteForm = $this->createDeleteForm($id);
-
-        return $this->render('TrelloAppBundle:Card:edit.html.twig', array(
-            'entity'      => $entity,
-            'edit_form'   => $editForm->createView(),
-            'delete_form' => $deleteForm->createView(),
-        ));
-    }
-
-    /**
-    * Creates a form to edit a Card entity.
-    *
-    * @param Card $entity The entity
-    *
-    * @return \Symfony\Component\Form\Form The form
-    */
-    private function createEditForm(Card $entity)
-    {
-        $form = $this->createForm(new CardType(), $entity, array(
-            'action' => $this->generateUrl('card_update', array('id' => $entity->getId())),
-            'method' => 'PUT',
-        ));
-
-        $form->add('submit', 'submit', array('label' => 'Update'));
-
-        return $form;
-    }
     /**
      * Edits an existing Card entity.
      *
@@ -187,38 +87,17 @@ class CardController extends Controller
      */
     public function deleteAction(Request $request, $id)
     {
-        $form = $this->createDeleteForm($id);
-        $form->handleRequest($request);
 
-        if ($form->isValid()) {
-            $em = $this->getDoctrine()->getManager();
-            $entity = $em->getRepository('TrelloAppBundle:Card')->find($id);
+        $em = $this->getDoctrine()->getManager();
+        $entity = $em->getRepository('TrelloAppBundle:Card')->find($id);
 
-            if (!$entity) {
-                throw $this->createNotFoundException('Unable to find Card entity.');
-            }
-
-            $em->remove($entity);
-            $em->flush();
+        if (!$entity) {
+            throw $this->createNotFoundException('Unable to find Card entity.');
         }
 
-        return $this->redirect($this->generateUrl('card'));
-    }
+        $em->remove($entity);
+        $em->flush();
 
-    /**
-     * Creates a form to delete a Card entity by id.
-     *
-     * @param mixed $id The entity id
-     *
-     * @return \Symfony\Component\Form\Form The form
-     */
-    private function createDeleteForm($id)
-    {
-        return $this->createFormBuilder()
-            ->setAction($this->generateUrl('card_delete', array('id' => $id)))
-            ->setMethod('DELETE')
-            ->add('submit', 'submit', array('label' => 'Delete'))
-            ->getForm()
-        ;
+        return new JsonResponse([]);
     }
 }

@@ -19,34 +19,38 @@ class Card
      * @ORM\Id
      * @ORM\GeneratedValue(strategy="AUTO")
      */
-    protected $id;
+    public $id;
 
     /**
      * @var string
      *
      * @ORM\Column(name="title", type="string", length=255)
      */
-    protected $title;
+    public $title;
 
     /**
      * @var boolean
      *
      * @ORM\Column(name="archived", type="boolean")
      */
-    protected $archived;
+    public $archived;
 
     /**
      * @var string
      *
      * @ORM\Column(name="description", type="string", length=255)
      */
-    protected $description;
+    public $description;
 
 
     /**
-     * @ORM\ManyToOne(targetEntity="Liste", inversedBy="card")
+     * @ORM\ManyToOne(targetEntity="Liste", inversedBy="card", cascade={"remove"})
      */
-    protected $liste;
+    public $liste;
+
+    public function __toString(){
+        return $this->title;
+    }
 
     /**
      * Get id

@@ -12,3 +12,17 @@
 .modal-footer {
   text-align: left;
 }
+.clear {
+  clear: both;
+}
+.scroll-x {
+  overflow-x: scroll;
+}
+.liste {
+  width: 300px;
+  display: block;
+  float: left;
+}
+.list-group-item {
+  display: block;
+}

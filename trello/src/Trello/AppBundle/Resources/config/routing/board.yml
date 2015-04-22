@@ -1,3 +1,7 @@
+board:
+    path:     /
+    defaults: { _controller: "TrelloAppBundle:Board:index" }
+
 board_show:
     path:     /{id}/show
     defaults: { _controller: "TrelloAppBundle:Board:show" }

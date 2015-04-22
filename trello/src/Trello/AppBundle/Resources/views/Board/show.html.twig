@@ -1,35 +1,78 @@
 {% extends '::base.html.twig' %}
 
 {% block body -%}
-    <h1>Board</h1>
+    <h1>{{ entity.title }}</h1>
+    <p>{{ entity.description }}</p>
+    <button type="button" class="btn btn-primary" data-toggle="modal" data-target="#addList">
+        Ajouter une liste
+    </button>
+    <a href="{{ path('board_edit', { 'id': entity.id }) }}" class="btn btn-info">edit</a>
 
-    <table class="record_properties">
-        <tbody>
-            <tr>
-                <th>Id</th>
-                <td>{{ entity.id }}</td>
-            </tr>
-            <tr>
-                <th>Title</th>
-                <td>{{ entity.title }}</td>
-            </tr>
-            <tr>
-                <th>Description</th>
-                <td>{{ entity.description }}</td>
-            </tr>
-            <tr>
-                <th>Archived</th>
-                <td>{{ entity.archived }}</td>
-            </tr>
-        </tbody>
-    </table>
+    <div class="scroll-x" data-id="{{ entity.id }}">
+        <div class="scroll">
+            {% for liste in entity.getListe() %}
+                <div class="liste">
+                    <div class="well">
+                        <b><em>{{ liste.title }}</em></b>
+                        <button type="button" class="btn btn-primary click" data-id="{{ liste.id }}" data-toggle="modal" data-target="#addCard">
+                            <i class="glyphicon glyphicon-plus"></i>
+                        </button>
+                        <button type="button" class="btn btn-danger delete" data-id="{{ liste.id }}">
+                            <i class="glyphicon glyphicon-remove"></i>
+                        </button>
+                        <ul class="list-group clear">
+                            {% for card in liste.getCard() %}
+                                <li class="list-group-item">
+                                    <b>{{ card.title }}</b>
+                                    <em>{{ card.description }}</em>
+                                    <button type="button" class="pull-right delete-card" data-id="{{ card.id }}">
+                                        <i class="glyphicon glyphicon-remove"></i>
+                                    </button>
+                                </li>
+                            {% endfor %}
+                        </ul>
+                    </div>
+                </div>
+            {% endfor %}
+        </div>
+    </div>
 
-    <ul class="record_actions">
-        <li>
-            <a href="{{ path('board_edit', { 'id': entity.id }) }}">
-                Edit
-            </a>
-        </li>
-        <li>{{ form(delete_form) }}</li>
-    </ul>
+    <div class="modal fade" id="addList" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
+        <div class="modal-dialog">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+                    <h4 class="modal-title" id="myModalLabel">Add a list</h4>
+                </div>
+                <div class="modal-body">
+                    <input type="text" id="listName" placeholder="Name"/>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
+                    <button type="button" class="btn btn-primary" id="submitList">Save changes</button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div class="modal fade" id="addCard" tabindex="-1" role="dialog" aria-labelledby="myModalLabel2" aria-hidden="true">
+        <div class="modal-dialog">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+                    <h4 class="modal-title" id="myModalLabel2">Add a Card</h4>
+                </div>
+                <div class="modal-body">
+                    <input type="text" id="cardName" placeholder="Name"/>
+                    <input type="text" id="cardDescription" placeholder="Description"/>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
+                    <button type="button" class="btn btn-primary" id="submitCard">Save changes</button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    {{ form(delete_form) }}
 {% endblock %}

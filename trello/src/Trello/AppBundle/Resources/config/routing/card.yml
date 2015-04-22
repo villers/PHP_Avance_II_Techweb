@@ -11,7 +11,7 @@ card_new:
     defaults: { _controller: "TrelloAppBundle:Card:new" }
 
 card_create:
-    path:     /create
+    path:     /{id}/create
     defaults: { _controller: "TrelloAppBundle:Card:create" }
     methods:  POST
 

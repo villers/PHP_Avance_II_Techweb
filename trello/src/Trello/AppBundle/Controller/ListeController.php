@@ -2,9 +2,14 @@
 
 namespace Trello\AppBundle\Controller;
 
+use Symfony\Component\HttpFoundation\JsonResponse;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Bundle\FrameworkBundle\Controller\Controller;
 
+use Symfony\Component\HttpFoundation\Response;
+use Symfony\Component\Serializer\Encoder\JsonEncoder;
+use Symfony\Component\Serializer\Normalizer\GetSetMethodNormalizer;
+use Symfony\Component\Serializer\Serializer;
 use Trello\AppBundle\Entity\Liste;
 use Trello\AppBundle\Form\ListeType;
 
@@ -33,124 +38,23 @@ class ListeController extends Controller
      * Creates a new Liste entity.
      *
      */
-    public function createAction(Request $request)
-    {
-        $entity = new Liste();
-        $form = $this->createCreateForm($entity);
-        $form->handleRequest($request);
-
-        if ($form->isValid()) {
-            $em = $this->getDoctrine()->getManager();
-            $em->persist($entity);
-            $em->flush();
-
-            return $this->redirect($this->generateUrl('liste_show', array('id' => $entity->getId())));
-        }
-
-        return $this->render('TrelloAppBundle:Liste:new.html.twig', array(
-            'entity' => $entity,
-            'form'   => $form->createView(),
-        ));
-    }
-
-    /**
-     * Creates a form to create a Liste entity.
-     *
-     * @param Liste $entity The entity
-     *
-     * @return \Symfony\Component\Form\Form The form
-     */
-    private function createCreateForm(Liste $entity)
-    {
-        $form = $this->createForm(new ListeType(), $entity, array(
-            'action' => $this->generateUrl('liste_create'),
-            'method' => 'POST',
-        ));
-
-        $form->add('submit', 'submit', array('label' => 'Create'));
-
-        return $form;
-    }
-
-    /**
-     * Displays a form to create a new Liste entity.
-     *
-     */
-    public function newAction()
-    {
-        $entity = new Liste();
-        $form   = $this->createCreateForm($entity);
-
-        return $this->render('TrelloAppBundle:Liste:new.html.twig', array(
-            'entity' => $entity,
-            'form'   => $form->createView(),
-        ));
-    }
-
-    /**
-     * Finds and displays a Liste entity.
-     *
-     */
-    public function showAction($id)
+    public function createAction($id, Request $request)
     {
         $em = $this->getDoctrine()->getManager();
+        $board = $em->getRepository('TrelloAppBundle:Board')->find($id);
 
-        $entity = $em->getRepository('TrelloAppBundle:Liste')->find($id);
+        $entity = new Liste();
+        $entity->setBoard($board);
+        $entity->setArchived(false);
+        $entity->setTitle($request->request->get('title'));
 
-        if (!$entity) {
-            throw $this->createNotFoundException('Unable to find Liste entity.');
-        }
+        $em->persist($entity);
+        $em->flush();
 
-        $deleteForm = $this->createDeleteForm($id);
-
-        return $this->render('TrelloAppBundle:Liste:show.html.twig', array(
-            'entity'      => $entity,
-            'delete_form' => $deleteForm->createView(),
-        ));
+        return new JsonResponse(get_object_vars($entity));
     }
 
-    /**
-     * Displays a form to edit an existing Liste entity.
-     *
-     */
-    public function editAction($id)
-    {
-        $em = $this->getDoctrine()->getManager();
 
-        $entity = $em->getRepository('TrelloAppBundle:Liste')->find($id);
-
-        if (!$entity) {
-            throw $this->createNotFoundException('Unable to find Liste entity.');
-        }
-
-        $editForm = $this->createEditForm($entity);
-        $deleteForm = $this->createDeleteForm($id);
-
-        return $this->render('TrelloAppBundle:Liste:edit.html.twig', array(
-            'entity'      => $entity,
-            'edit_form'   => $editForm->createView(),
-            'delete_form' => $deleteForm->createView(),
-        ));
-    }
-
-    /**
-    * Creates a form to edit a Liste entity.
-    *
-    * @param Liste $entity The entity
-    *
-    * @return \Symfony\Component\Form\Form The form
-    */
-    private function createEditForm(Liste $entity)
-    {
-        $form = $this->createForm(new ListeType(), $entity, array(
-            'action' => $this->generateUrl('liste_update', array('id' => $entity->getId())),
-            'method' => 'PUT',
-        ));
-
-        $form->add('submit', 'submit', array('label' => 'Update'));
-
-        return $form;
-    }
     /**
      * Edits an existing Liste entity.
      *
@@ -165,21 +69,9 @@ class ListeController extends Controller
             throw $this->createNotFoundException('Unable to find Liste entity.');
         }
 
-        $deleteForm = $this->createDeleteForm($id);
-        $editForm = $this->createEditForm($entity);
-        $editForm->handleRequest($request);
+        $em->flush();
+        return $this->redirect($this->generateUrl('liste_edit', array('id' => $id)));
 
-        if ($editForm->isValid()) {
-            $em->flush();
-
-            return $this->redirect($this->generateUrl('liste_edit', array('id' => $id)));
-        }
-
-        return $this->render('TrelloAppBundle:Liste:edit.html.twig', array(
-            'entity'      => $entity,
-            'edit_form'   => $editForm->createView(),
-            'delete_form' => $deleteForm->createView(),
-        ));
     }
     /**
      * Deletes a Liste entity.
@@ -187,38 +79,25 @@ class ListeController extends Controller
      */
     public function deleteAction(Request $request, $id)
     {
-        $form = $this->createDeleteForm($id);
-        $form->handleRequest($request);
 
-        if ($form->isValid()) {
-            $em = $this->getDoctrine()->getManager();
-            $entity = $em->getRepository('TrelloAppBundle:Liste')->find($id);
-
-            if (!$entity) {
-                throw $this->createNotFoundException('Unable to find Liste entity.');
-            }
-
-            $em->remove($entity);
+        $em = $this->getDoctrine()->getManager();
+        $entity = $em->getRepository('TrelloAppBundle:Card')->findByListe($id);
+        foreach($entity as $row){
+            $em->remove($row);
             $em->flush();
         }
 
-        return $this->redirect($this->generateUrl('liste'));
+
+        $entity = $em->getRepository('TrelloAppBundle:Liste')->find($id);
+
+        if (!$entity) {
+            throw $this->createNotFoundException('Unable to find Liste entity.');
+        }
+
+        $em->remove($entity);
+        $em->flush();
+
+        return new JsonResponse([]);
     }
 
-    /**
-     * Creates a form to delete a Liste entity by id.
-     *
-     * @param mixed $id The entity id
-     *
-     * @return \Symfony\Component\Form\Form The form
-     */
-    private function createDeleteForm($id)
-    {
-        return $this->createFormBuilder()
-            ->setAction($this->generateUrl('liste_delete', array('id' => $id)))
-            ->setMethod('DELETE')
-            ->add('submit', 'submit', array('label' => 'Delete'))
-            ->getForm()
-        ;
-    }
 }

@@ -20,42 +20,39 @@ class Liste
      * @ORM\Id
      * @ORM\GeneratedValue(strategy="AUTO")
      */
-    protected $id;
+    public $id;
 
     /**
      * @var string
      *
      * @ORM\Column(name="title", type="string", length=255)
      */
-    protected $title;
+    public $title;
 
     /**
      * @var boolean
      *
      * @ORM\Column(name="archived", type="boolean")
      */
-    protected $archived;
+    public $archived;
 
     /**
-     * @var integer
-     *
-     * @ORM\Column(name="sort", type="integer")
+     * @ORM\ManyToOne(targetEntity="Board", inversedBy="liste", cascade={"remove"})
      */
-    protected $sort;
+    public $board;
 
     /**
-     * @ORM\ManyToOne(targetEntity="Board", inversedBy="liste")
+     * @ORM\OneToMany(targetEntity="Card", mappedBy="liste", cascade={"remove"})
      */
-    protected $board;
-
-    /**
-     * @ORM\OneToMany(targetEntity="Card", mappedBy="liste")
-     */
-    protected $card;
+    public $card;
 
     public function __construct()
     {
         $this->card = new ArrayCollection();
+    }
+
+    public function __toString(){
+        return $this->title;
     }
 
     /**
@@ -112,29 +109,6 @@ class Liste
     public function getArchived()
     {
         return $this->archived;
-    }
-
-    /**
-     * Set sort
-     *
-     * @param integer $sort
-     * @return Liste
-     */
-    public function setSort($sort)
-    {
-        $this->sort = $sort;
-
-        return $this;
-    }
-
-    /**
-     * Get sort
-     *
-     * @return integer 
-     */
-    public function getSort()
-    {
-        return $this->sort;
     }
 
     /**

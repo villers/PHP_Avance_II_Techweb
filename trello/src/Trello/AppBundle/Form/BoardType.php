@@ -17,6 +17,7 @@ class BoardType extends AbstractType
         $builder
             ->add('title')
             ->add('description')
+            ->add('users')
         ;
     }
     

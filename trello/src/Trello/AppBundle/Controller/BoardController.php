@@ -14,6 +14,21 @@ use Trello\AppBundle\Form\BoardType;
  */
 class BoardController extends Controller
 {
+
+    /**
+     * Lists all Board entities.
+     *
+     */
+    public function indexAction()
+    {
+        $em = $this->getDoctrine()->getManager();
+
+        $entities = $em->getRepository('TrelloAppBundle:Board')->findAll();
+
+        return $this->render('TrelloAppBundle:Board:index.html.twig', array(
+            'entities' => $entities,
+        ));
+    }
     /**
      * Creates a new Board entity.
      *
@@ -21,8 +36,8 @@ class BoardController extends Controller
     public function createAction(Request $request)
     {
         $entity = new Board();
-        $entity->setUser($this->getUser());
         $entity->setArchived(false);
+        $entity->addUser($this->getUser());
         $form = $this->createCreateForm($entity);
         $form->handleRequest($request);
 
@@ -31,7 +46,7 @@ class BoardController extends Controller
             $em->persist($entity);
             $em->flush();
 
-            return $this->redirect($this->generateUrl('board_show', array('id' => $entity->getId())));
+            return $this->redirect($this->generateUrl('trello_app_homepage'));
         }
 
         return $this->render('TrelloAppBundle:Board:new.html.twig', array(

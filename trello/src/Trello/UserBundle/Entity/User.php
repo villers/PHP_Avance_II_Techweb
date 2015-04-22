@@ -24,14 +24,14 @@ class User extends BaseUser
     protected $id;
 
     /**
-     * @ORM\OneToMany(targetEntity="\Trello\AppBundle\Entity\Board", mappedBy="user")
-     */
-    protected $board;
+     * @ORM\ManyToMany(targetEntity="\Trello\AppBundle\Entity\Board", mappedBy="users")
+     **/
+    protected $boards;
 
     public function __construct()
     {
         parent::__construct();
-        $this->board = new ArrayCollection();
+        $this->boards = new ArrayCollection();
     }
 
     /**
@@ -45,35 +45,35 @@ class User extends BaseUser
     }
 
     /**
-     * Add board
+     * Add boards
      *
-     * @param \Trello\AppBundle\Entity\Board $board
+     * @param \Trello\AppBundle\Entity\Board $boards
      * @return User
      */
-    public function addBoard(\Trello\AppBundle\Entity\Board $board)
+    public function addBoard(\Trello\AppBundle\Entity\Board $boards)
     {
-        $this->board[] = $board;
+        $this->boards[] = $boards;
 
         return $this;
     }
 
     /**
-     * Remove board
+     * Remove boards
      *
-     * @param \Trello\AppBundle\Entity\Board $board
+     * @param \Trello\AppBundle\Entity\Board $boards
      */
-    public function removeBoard(\Trello\AppBundle\Entity\Board $board)
+    public function removeBoard(\Trello\AppBundle\Entity\Board $boards)
     {
-        $this->board->removeElement($board);
+        $this->boards->removeElement($boards);
     }
 
     /**
-     * Get board
+     * Get boards
      *
      * @return \Doctrine\Common\Collections\Collection 
      */
-    public function getBoard()
+    public function getBoards()
     {
-        return $this->board;
+        return $this->boards;
     }
 }
