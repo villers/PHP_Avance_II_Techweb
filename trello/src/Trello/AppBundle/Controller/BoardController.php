@@ -16,20 +16,6 @@ class BoardController extends Controller
 {
 
     /**
-     * Lists all Board entities.
-     *
-     */
-    public function indexAction()
-    {
-        $em = $this->getDoctrine()->getManager();
-
-        $entities = $em->getRepository('TrelloAppBundle:Board')->findAll();
-
-        return $this->render('TrelloAppBundle:Board:index.html.twig', array(
-            'entities' => $entities,
-        ));
-    }
-    /**
      * Creates a new Board entity.
      *
      */
@@ -95,9 +81,9 @@ class BoardController extends Controller
      */
     public function showAction($id)
     {
-        $em = $this->getDoctrine()->getManager();
-
-        $entity = $em->getRepository('TrelloAppBundle:Board')->find($id);
+        $entity = $this->getUser()->getBoards()->filter(function($board) use ($id) {
+            return $board->getId() == $id;
+        })->first();
 
         if (!$entity) {
             throw $this->createNotFoundException('Unable to find Board entity.');
@@ -117,9 +103,9 @@ class BoardController extends Controller
      */
     public function editAction($id)
     {
-        $em = $this->getDoctrine()->getManager();
-
-        $entity = $em->getRepository('TrelloAppBundle:Board')->find($id);
+        $entity = $this->getUser()->getBoards()->filter(function($board) use ($id) {
+            return $board->getId() == $id;
+        })->first();
 
         if (!$entity) {
             throw $this->createNotFoundException('Unable to find Board entity.');
@@ -161,7 +147,9 @@ class BoardController extends Controller
     {
         $em = $this->getDoctrine()->getManager();
 
-        $entity = $em->getRepository('TrelloAppBundle:Board')->find($id);
+        $entity = $this->getUser()->getBoards()->filter(function($board) use ($id) {
+            return $board->getId() == $id;
+        })->first();
 
         if (!$entity) {
             throw $this->createNotFoundException('Unable to find Board entity.');
@@ -194,7 +182,9 @@ class BoardController extends Controller
 
         if ($form->isValid()) {
             $em = $this->getDoctrine()->getManager();
-            $entity = $em->getRepository('TrelloAppBundle:Board')->find($id);
+            $entity = $this->getUser()->getBoards()->filter(function($board) use ($id) {
+                return $board->getId() == $id;
+            })->first();
 
             if (!$entity) {
                 throw $this->createNotFoundException('Unable to find Board entity.');

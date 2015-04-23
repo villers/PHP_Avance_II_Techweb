@@ -15,21 +15,6 @@ use Trello\AppBundle\Form\CardType;
  */
 class CardController extends Controller
 {
-
-    /**
-     * Lists all Card entities.
-     *
-     */
-    public function indexAction()
-    {
-        $em = $this->getDoctrine()->getManager();
-
-        $entities = $em->getRepository('TrelloAppBundle:Card')->findAll();
-
-        return $this->render('TrelloAppBundle:Card:index.html.twig', array(
-            'entities' => $entities,
-        ));
-    }
     /**
      * Creates a new Card entity.
      *
@@ -65,21 +50,11 @@ class CardController extends Controller
             throw $this->createNotFoundException('Unable to find Card entity.');
         }
 
-        $deleteForm = $this->createDeleteForm($id);
-        $editForm = $this->createEditForm($entity);
-        $editForm->handleRequest($request);
+        $entity->setListe($em->getRepository('TrelloAppBundle:Liste')->find($request->request->get('id')));
+        $em->flush();
 
-        if ($editForm->isValid()) {
-            $em->flush();
+        return new JsonResponse([]);
 
-            return $this->redirect($this->generateUrl('card_edit', array('id' => $id)));
-        }
-
-        return $this->render('TrelloAppBundle:Card:edit.html.twig', array(
-            'entity'      => $entity,
-            'edit_form'   => $editForm->createView(),
-            'delete_form' => $deleteForm->createView(),
-        ));
     }
     /**
      * Deletes a Card entity.

@@ -1,14 +1,23 @@
 /// <reference path="typings/tsd.d.ts" />
+'use strict';
+
 var i: number;
 var nbList: number = $('.scroll').children().length;
-var sizeList: number = (parseInt($('.liste').css('width'), 10) + 5) * nbList;
+var sizeList: number = (parseInt($('.liste').css('width'), 10) + 20) * nbList;
 $('.scroll').css('width', sizeList);
 
-
-$( ".list-group" ).sortable();
+$(".list-group" ).sortable();
 $('.list-group-item').draggable({
     snap: ".list-group",
-    connectToSortable: ".list-group"
+    connectToSortable: ".list-group",
+    stop: ( event, ui ) => {
+        var current: HTMLElement = $(event.target).data('id');
+        var liste: HTMLElement =  $(event.toElement).parents('.liste').data('id');
+        $.post(
+            '/card/'+current+'/update',
+            {'id': liste}
+        );
+    }
 });
 
 $('.click').click(function(elem) {
@@ -20,7 +29,7 @@ $('.delete').click(function(elem) {
     $.post(
         '/liste/'+i+'/delete',
         (data) => {
-            location.reload();
+            $(elem.currentTarget).parents('.liste').slideUp();
         }
     );
 });
@@ -30,7 +39,7 @@ $('.delete-card').click(function(elem) {
     $.post(
         '/card/'+i+'/delete',
         (data) => {
-            location.reload();
+            $(elem.currentTarget).parent('li').slideUp();
         }
     );
 });

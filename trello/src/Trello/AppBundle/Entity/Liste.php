@@ -37,7 +37,7 @@ class Liste
     public $archived;
 
     /**
-     * @ORM\ManyToOne(targetEntity="Board", inversedBy="liste", cascade={"remove"})
+     * @ORM\ManyToOne(targetEntity="Board", inversedBy="liste")
      */
     public $board;
 

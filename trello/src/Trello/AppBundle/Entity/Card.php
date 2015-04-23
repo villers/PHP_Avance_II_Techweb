@@ -44,7 +44,7 @@ class Card
 
 
     /**
-     * @ORM\ManyToOne(targetEntity="Liste", inversedBy="card", cascade={"remove"})
+     * @ORM\ManyToOne(targetEntity="Liste", inversedBy="card")
      */
     public $liste;
 

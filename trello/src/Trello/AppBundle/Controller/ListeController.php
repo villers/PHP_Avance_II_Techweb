@@ -21,20 +21,6 @@ class ListeController extends Controller
 {
 
     /**
-     * Lists all Liste entities.
-     *
-     */
-    public function indexAction()
-    {
-        $em = $this->getDoctrine()->getManager();
-
-        $entities = $em->getRepository('TrelloAppBundle:Liste')->findAll();
-
-        return $this->render('TrelloAppBundle:Liste:index.html.twig', array(
-            'entities' => $entities,
-        ));
-    }
-    /**
      * Creates a new Liste entity.
      *
      */
@@ -54,25 +40,6 @@ class ListeController extends Controller
         return new JsonResponse(get_object_vars($entity));
     }
 
-
-    /**
-     * Edits an existing Liste entity.
-     *
-     */
-    public function updateAction(Request $request, $id)
-    {
-        $em = $this->getDoctrine()->getManager();
-
-        $entity = $em->getRepository('TrelloAppBundle:Liste')->find($id);
-
-        if (!$entity) {
-            throw $this->createNotFoundException('Unable to find Liste entity.');
-        }
-
-        $em->flush();
-        return $this->redirect($this->generateUrl('liste_edit', array('id' => $id)));
-
-    }
     /**
      * Deletes a Liste entity.
      *
@@ -81,13 +48,6 @@ class ListeController extends Controller
     {
 
         $em = $this->getDoctrine()->getManager();
-        $entity = $em->getRepository('TrelloAppBundle:Card')->findByListe($id);
-        foreach($entity as $row){
-            $em->remove($row);
-            $em->flush();
-        }
-
-
         $entity = $em->getRepository('TrelloAppBundle:Liste')->find($id);
 
         if (!$entity) {

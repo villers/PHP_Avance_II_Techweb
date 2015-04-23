@@ -4,25 +4,30 @@
     <h1>{{ entity.title }}</h1>
     <p>{{ entity.description }}</p>
     <button type="button" class="btn btn-primary" data-toggle="modal" data-target="#addList">
-        Ajouter une liste
+        Add a list
     </button>
     <a href="{{ path('board_edit', { 'id': entity.id }) }}" class="btn btn-info">edit</a>
+
+    <hr/>
 
     <div class="scroll-x" data-id="{{ entity.id }}">
         <div class="scroll">
             {% for liste in entity.getListe() %}
-                <div class="liste">
+                <div class="liste" data-id="{{ liste.id }}">
                     <div class="well">
                         <b><em>{{ liste.title }}</em></b>
-                        <button type="button" class="btn btn-primary click" data-id="{{ liste.id }}" data-toggle="modal" data-target="#addCard">
-                            <i class="glyphicon glyphicon-plus"></i>
-                        </button>
-                        <button type="button" class="btn btn-danger delete" data-id="{{ liste.id }}">
-                            <i class="glyphicon glyphicon-remove"></i>
-                        </button>
-                        <ul class="list-group clear">
+                        <div class="pull-right">
+                            <button type="button" class="btn btn-primary click" data-id="{{ liste.id }}" data-toggle="modal" data-target="#addCard">
+                                <i class="glyphicon glyphicon-plus"></i>
+                            </button>
+                            <button type="button" class="btn btn-danger delete" data-id="{{ liste.id }}">
+                                <i class="glyphicon glyphicon-remove"></i>
+                            </button>
+                        </div>
+                        <hr/>
+                        <ul class="list-group clear liste-color">
                             {% for card in liste.getCard() %}
-                                <li class="list-group-item">
+                                <li class="list-group-item" data-id="{{ card.id }}">
                                     <b>{{ card.title }}</b>
                                     <em>{{ card.description }}</em>
                                     <button type="button" class="pull-right delete-card" data-id="{{ card.id }}">

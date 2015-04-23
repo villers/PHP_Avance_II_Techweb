@@ -1,12 +1,18 @@
 /// <reference path="typings/tsd.d.ts" />
+'use strict';
 var i;
 var nbList = $('.scroll').children().length;
-var sizeList = (parseInt($('.liste').css('width'), 10) + 5) * nbList;
+var sizeList = (parseInt($('.liste').css('width'), 10) + 20) * nbList;
 $('.scroll').css('width', sizeList);
 $(".list-group").sortable();
 $('.list-group-item').draggable({
     snap: ".list-group",
-    connectToSortable: ".list-group"
+    connectToSortable: ".list-group",
+    stop: function (event, ui) {
+        var current = $(event.target).data('id');
+        var liste = $(event.toElement).parents('.liste').data('id');
+        $.post('/card/' + current + '/update', { 'id': liste });
+    }
 });
 $('.click').click(function (elem) {
     i = $(this).data('id');
@@ -14,13 +20,13 @@ $('.click').click(function (elem) {
 $('.delete').click(function (elem) {
     i = $(this).data('id');
     $.post('/liste/' + i + '/delete', function (data) {
-        location.reload();
+        $(elem.currentTarget).parents('.liste').slideUp();
     });
 });
 $('.delete-card').click(function (elem) {
     i = $(this).data('id');
     $.post('/card/' + i + '/delete', function (data) {
-        location.reload();
+        $(elem.currentTarget).parent('li').slideUp();
     });
 });
 $('#submitList').click(function () {

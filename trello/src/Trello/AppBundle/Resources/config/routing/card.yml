@@ -1,23 +1,7 @@
-card:
-    path:     /
-    defaults: { _controller: "TrelloAppBundle:Card:index" }
-
-card_show:
-    path:     /{id}/show
-    defaults: { _controller: "TrelloAppBundle:Card:show" }
-
-card_new:
-    path:     /new
-    defaults: { _controller: "TrelloAppBundle:Card:new" }
-
 card_create:
     path:     /{id}/create
     defaults: { _controller: "TrelloAppBundle:Card:create" }
     methods:  POST
-
-card_edit:
-    path:     /{id}/edit
-    defaults: { _controller: "TrelloAppBundle:Card:edit" }
 
 card_update:
     path:     /{id}/update
