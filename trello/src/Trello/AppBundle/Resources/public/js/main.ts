@@ -44,11 +44,16 @@ $('.delete-card').click(function(elem) {
     );
 });
 
+$('.archived-card').click(function(elem) {
+    i = $(this).data('id');
+    $.post(
+        '/card/'+i+'/archived'
+    );
+});
+
 
 $('#submitList').click(() => {
     var name: string = $('#listName').val();
-    console.log(name);
-
     $.post(
         '/liste/'+$(".scroll-x").data('id')+'/create',
         { 'title': name},

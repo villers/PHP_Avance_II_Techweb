@@ -8,6 +8,11 @@ card_update:
     defaults: { _controller: "TrelloAppBundle:Card:update" }
     methods:  [POST, PUT]
 
+card_archived:
+    path:     /{id}/archived
+    defaults: { _controller: "TrelloAppBundle:Card:archived" }
+    methods:  [POST, PUT]
+
 card_delete:
     path:     /{id}/delete
     defaults: { _controller: "TrelloAppBundle:Card:delete" }

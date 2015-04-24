@@ -29,9 +29,12 @@ $('.delete-card').click(function (elem) {
         $(elem.currentTarget).parent('li').slideUp();
     });
 });
+$('.archived-card').click(function (elem) {
+    i = $(this).data('id');
+    $.post('/card/' + i + '/archived');
+});
 $('#submitList').click(function () {
     var name = $('#listName').val();
-    console.log(name);
     $.post('/liste/' + $(".scroll-x").data('id') + '/create', { 'title': name }, function (data) {
         location.reload();
     });

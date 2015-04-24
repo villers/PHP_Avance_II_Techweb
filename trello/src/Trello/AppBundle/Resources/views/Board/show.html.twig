@@ -28,6 +28,7 @@
                         <ul class="list-group clear liste-color">
                             {% for card in liste.getCard() %}
                                 <li class="list-group-item" data-id="{{ card.id }}">
+                                    <input type="checkbox" class="archived-card" data-id="{{ card.id }}" {% if(card.archived) %}checked{% endif %} />
                                     <b>{{ card.title }}</b>
                                     <em>{{ card.description }}</em>
                                     <button type="button" class="pull-right delete-card" data-id="{{ card.id }}">

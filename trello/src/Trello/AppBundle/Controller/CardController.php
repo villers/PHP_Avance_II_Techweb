@@ -54,8 +54,23 @@ class CardController extends Controller
         $em->flush();
 
         return new JsonResponse([]);
-
     }
+
+    public function archivedAction(Request $request, $id)
+    {
+        $em = $this->getDoctrine()->getManager();
+
+        $entity = $em->getRepository('TrelloAppBundle:Card')->find($id);
+
+        if (!$entity) {
+            throw $this->createNotFoundException('Unable to find Card entity.');
+        }
+        $entity->setArchived(!$entity->getArchived());
+        $em->flush();
+
+        return new JsonResponse([]);
+    }
+
     /**
      * Deletes a Card entity.
      *
