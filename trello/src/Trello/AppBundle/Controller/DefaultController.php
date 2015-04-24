@@ -22,7 +22,8 @@ class DefaultController extends Controller
                         $board->counter++;
                 }
             }
-            $board->counter = round(($board->counter / $nbCard) * 100);
+            if($nbCard != 0)
+                $board->counter = round(($board->counter / $nbCard) * 100);
         }
         return $this->render('TrelloAppBundle:Default:index.html.twig', compact('boards'));
     }
